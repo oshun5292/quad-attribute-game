@@ -142,6 +142,62 @@
     </div>
   </section>
 
+  <!-- 更新通知バナー -->
+  <div id="update-banner" class="update-banner" hidden>
+    <p>新しいバージョンが利用可能です</p>
+    <button id="update-btn" class="btn btn--primary btn--small">更新する</button>
+  </div>
+
   <script type="module" src="js/main.js"></script>
+
+  <script>
+    // Service Worker 更新検知・自動リロード
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then((reg) => {
+        // 新しい SW が見つかったとき
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'activated') {
+                showUpdateBanner();
+              }
+            });
+          }
+        });
+      });
+
+      // SW からのメッセージ（activate 時の通知）を受信
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'SW_UPDATED') {
+          showUpdateBanner();
+        }
+      });
+
+      // controllerchange: 新しい SW がページを制御し始めたらリロード
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+
+    function showUpdateBanner() {
+      const banner = document.getElementById('update-banner');
+      if (banner) {
+        banner.hidden = false;
+        document.getElementById('update-btn').addEventListener('click', () => {
+          // 新しい SW に skipWaiting を送信してアクティベートさせる
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+          }
+          // controllerchange でリロードされる
+          banner.hidden = true;
+        });
+      }
+    }
+  </script>
 </body>
 </html>

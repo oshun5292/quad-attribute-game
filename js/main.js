@@ -173,10 +173,4 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHistory();
 });
 
-// ─── Service Worker 登録（サイレントフォールバック: Req 8.7） ─────────────────
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {
-    // オフライン機能は無効になるが、アプリは正常動作を継続
-  });
-}
+// ─── Service Worker 登録は index.html で実施（更新検知UIと統合） ──────────────
