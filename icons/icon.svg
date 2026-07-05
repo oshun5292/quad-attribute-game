@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="64" fill="#1a1a2e"/>
+  <!-- 4×4 Grid -->
+  <g transform="translate(56, 56)">
+    <!-- Grid lines -->
+    <rect x="0" y="0" width="400" height="400" rx="16" fill="#16213e"/>
+    <!-- Cells (4x4) -->
+    <!-- Row 0 -->
+    <circle cx="55" cy="55" r="30" fill="#e85555"/>
+    <rect x="125" y="25" width="60" height="60" rx="8" fill="none" stroke="#2244bb" stroke-width="4"/>
+    <circle cx="255" cy="55" r="20" fill="#5588ee"/>
+    <rect x="325" y="30" width="50" height="50" rx="8" fill="#c02020"/>
+    <!-- Row 1 -->
+    <rect x="25" y="125" width="60" height="60" rx="8" fill="#2244bb"/>
+    <circle cx="155" cy="155" r="20" fill="none" stroke="#c02020" stroke-width="4"/>
+    <rect x="225" y="130" width="50" height="50" rx="8" fill="none" stroke="#5588ee" stroke-width="4"/>
+    <circle cx="355" cy="155" r="30" fill="#e85555"/>
+    <!-- Row 2 -->
+    <circle cx="55" cy="255" r="20" fill="none" stroke="#2244bb" stroke-width="4"/>
+    <rect x="125" y="225" width="60" height="60" rx="8" fill="#5588ee"/>
+    <circle cx="255" cy="255" r="30" fill="#c02020"/>
+    <rect x="330" y="230" width="50" height="50" rx="8" fill="none" stroke="#e85555" stroke-width="4"/>
+    <!-- Row 3 -->
+    <rect x="25" y="325" width="50" height="50" rx="8" fill="none" stroke="#5588ee" stroke-width="4"/>
+    <circle cx="155" cy="355" r="30" fill="#2244bb"/>
+    <rect x="225" y="325" width="60" height="60" rx="8" fill="#e85555"/>
+    <circle cx="355" cy="355" r="20" fill="none" stroke="#c02020" stroke-width="4"/>
+  </g>
+  <!-- Title -->
+  <text x="256" y="480" text-anchor="middle" font-family="system-ui, sans-serif" font-size="32" font-weight="700" fill="#ffcc00">QA</text>
+</svg>

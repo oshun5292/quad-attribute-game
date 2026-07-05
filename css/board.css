@@ -1,0 +1,74 @@
+/* ================================================================
+   board.css — 4×4グリッド・Cell スタイル
+   Requirements: 4.6, 9.3, 9.9
+================================================================ */
+
+/* ─── Board グリッド ───────────────────────────────────────────── */
+#board {
+  display: grid;
+  grid-template-columns: repeat(4, var(--cell-size));
+  grid-template-rows: repeat(4, var(--cell-size));
+  gap: var(--cell-gap);
+  background: var(--color-surface);
+  padding: var(--cell-gap);
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+/* ─── Cell ─────────────────────────────────────────────────────── */
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  min-width: 44px;
+  min-height: 44px;
+  background: #0d1b2a;
+  border: 2px solid #2a3f5f;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 80ms ease-out, background-color 150ms ease;
+  position: relative;
+}
+
+/* タップフィードバック（押し込み感） */
+.cell:active:not(.cell--disabled):not(.cell--occupied) {
+  transform: scale(0.92);
+}
+
+/* 無効状態（ロック中） */
+.cell--disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* 配置済み Cell */
+.cell--occupied {
+  cursor: default;
+  border-color: #3a5a8f;
+}
+
+/* 空き Cell のホバー（デスクトップ向け） */
+@media (hover: hover) {
+  .cell:not(.cell--disabled):not(.cell--occupied):hover {
+    background: #1a2d4a;
+    border-color: var(--color-accent);
+  }
+}
+
+/* ─── 勝利ライン Cell の強調 ──────────────────────────────────── */
+.cell--winning {
+  background-color: rgba(255, 200, 0, 0.35) !important;
+  border-color: #ffaa00 !important;
+  animation: winning-pulse 800ms ease-in-out infinite alternate;
+}
+
+@keyframes winning-pulse {
+  from {
+    box-shadow: 0 0 6px rgba(255, 200, 0, 0.4);
+  }
+  to {
+    box-shadow: 0 0 16px rgba(255, 200, 0, 0.7);
+  }
+}

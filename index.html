@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="description" content="4つの属性を持つコマを4×4の盤面に並べる2人用ボードゲーム" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/board.css" />
+  <link rel="stylesheet" href="css/piece.css" />
+  <link rel="stylesheet" href="css/overlays.css" />
+  <title>QuadAttribute</title>
+</head>
+<body data-phase="START_SCREEN">
+
+  <!-- ================================================================
+       Start Screen
+       表示条件: data-phase="START_SCREEN"
+  ================================================================ -->
+  <section id="start-screen" aria-label="スタート画面">
+    <h1 class="title">QuadAttribute</h1>
+
+    <div id="rules-text" class="rules">
+      <h2>遊び方</h2>
+      <ul>
+        <li>2人で1台の端末を交互に操作します。</li>
+        <li>コマは <strong>色・形・模様・サイズ</strong> の4属性を持ち、全16種類あります。</li>
+        <li>相手から渡されたコマを盤面の好きなマスに置きます。</li>
+        <li>置いた後、次に相手へ渡すコマを1つ選んでターン終了。</li>
+        <li><strong>縦・横・斜め</strong> のいずれかに、同じ属性を持つコマを<strong>4つ並べた</strong>プレイヤーの勝利！</li>
+        <li>16マスすべて埋まっても揃わなければ引き分けです。</li>
+      </ul>
+    </div>
+
+    <button id="start-btn" class="btn btn--primary btn--large" data-action="START_GAME">
+      ゲーム開始
+    </button>
+  </section>
+
+  <!-- ================================================================
+       Game Area
+       表示条件: data-phase="PLACE_PHASE" | "SELECT_PHASE" | "HANDOVER_SCREEN"
+  ================================================================ -->
+  <main id="game-area" aria-label="ゲームエリア">
+
+    <!-- ステータスバー -->
+    <div id="status-bar" role="status" aria-live="polite" aria-atomic="true">
+      <span id="active-player-label"></span>
+      <span id="phase-label"></span>
+    </div>
+
+    <!-- 4×4 盤面 -->
+    <div id="board"
+         role="grid"
+         aria-label="4×4ゲーム盤面"
+         aria-readonly="false">
+      <!-- 16個の .cell は render.js が動的に生成する -->
+    </div>
+
+    <!-- 配置対象コマ表示（PLACE_PHASE のみ表示） -->
+    <div id="selected-piece-area" aria-label="配置するコマ">
+      <p id="selected-piece-label" class="area-label">配置するコマ</p>
+      <div id="selected-piece-display"></div>
+    </div>
+
+    <!-- 未使用コマ一覧（SELECT_PHASE でタップ可能） -->
+    <div id="unused-pieces-area" aria-label="未使用コマ一覧">
+      <p id="unused-pieces-label" class="area-label">未使用のコマ</p>
+      <div id="unused-pieces-list"
+           role="list"
+           aria-label="未使用コマ一覧">
+        <!-- Piece 要素は render.js が動的に生成する -->
+      </div>
+    </div>
+
+    <!-- 決定ボタン（SELECT_PHASE でコマ選択時のみ有効） -->
+    <button id="confirm-btn"
+            class="btn btn--primary"
+            data-action="CONFIRM_SELECTION"
+            disabled
+            aria-disabled="true">
+      決定
+    </button>
+
+  </main>
+
+  <!-- ================================================================
+       Handover Overlay
+       表示条件: data-phase="HANDOVER_SCREEN"
+       ゲーム情報を透かしながら全操作をロックする半透明オーバーレイ
+  ================================================================ -->
+  <div id="handover-overlay"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="handover-message"
+       aria-hidden="true">
+    <div class="handover-content">
+      <p id="handover-message" class="handover-text"></p>
+      <button id="ready-btn"
+              class="btn btn--primary btn--large"
+              data-action="HANDOVER_READY">
+        準備OK
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       Result Screen
+       表示条件: data-phase="RESULT_SCREEN"
+  ================================================================ -->
+  <section id="result-screen" aria-label="結果画面" aria-live="assertive">
+    <div class="result-content">
+      <p id="result-message" class="result-text"></p>
+      <button id="replay-btn"
+              class="btn btn--primary btn--large"
+              data-action="REPLAY">
+        もう一度遊ぶ
+      </button>
+    </div>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

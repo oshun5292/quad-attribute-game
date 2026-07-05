@@ -1,0 +1,106 @@
+/* ================================================================
+   piece.css — Piece 擬似3D スタイル（CSS のみ）
+   Requirements: 9.3, 9.4, 9.7, 9.8
+================================================================ */
+
+/* ─── ベース Piece ─────────────────────────────────────────────── */
+.piece {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 100ms ease, outline 100ms ease;
+  flex-shrink: 0;
+  /* タップターゲット確保（最小44px） */
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  position: relative;
+}
+
+.piece[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ─── Size: Large / Small ──────────────────────────────────────── */
+.piece--large {
+  width: 52px;
+  height: 52px;
+  box-shadow:
+    0 6px 0 rgba(0, 0, 0, 0.45),
+    0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+.piece--small {
+  width: 36px;
+  height: 36px;
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.35),
+    0 4px 6px rgba(0, 0, 0, 0.2);
+  /* min-height/width はベースの44pxで確保、
+     表示上は36pxだが外側のpadding/marginでタップ領域を確保 */
+}
+
+/* ─── Shape: Circle / Square ───────────────────────────────────── */
+.piece--circle {
+  border-radius: 50%;
+}
+
+.piece--square {
+  border-radius: 6px;
+}
+
+/* ─── Pattern × Color: Solid ───────────────────────────────────── */
+.piece--solid.piece--red {
+  background: linear-gradient(145deg, #e85555, #c02020);
+}
+
+.piece--solid.piece--blue {
+  background: linear-gradient(145deg, #5588ee, #2244bb);
+}
+
+/* ─── Pattern × Color: Hollow ──────────────────────────────────── */
+.piece--hollow.piece--red {
+  background: transparent;
+  border: 3px solid #c02020;
+}
+
+.piece--hollow.piece--blue {
+  background: transparent;
+  border: 3px solid #2244bb;
+}
+
+/* ─── 選択状態（ハイライト） ───────────────────────────────────── */
+.piece--selected {
+  outline: 3px solid var(--color-accent, #ffcc00);
+  outline-offset: 3px;
+  transform: translateY(-2px);
+}
+
+/* ─── SelectedPieceDisplay 内の強調表示 ────────────────────────── */
+#selected-piece-display .piece {
+  animation: selected-glow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes selected-glow {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.2);
+  }
+}
+
+/* ─── Unused Pieces List レイアウト ────────────────────────────── */
+#unused-pieces-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+}
+
+/* Piece タップフィードバック */
+.piece:active:not([aria-disabled="true"]) {
+  transform: scale(0.9);
+}

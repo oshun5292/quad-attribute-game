@@ -1,0 +1,68 @@
+/* ================================================================
+   overlays.css — HandoverOverlay / ResultDisplay
+   Requirements: 6.1, 6.2, 6.3
+================================================================ */
+
+/* ─── Handover Overlay ─────────────────────────────────────────── */
+#handover-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  /* display は base.css のフェーズ制御で管理（デフォルト none） */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.handover-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 32px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-accent);
+  max-width: 320px;
+  text-align: center;
+}
+
+.handover-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+/* ─── Result Screen ────────────────────────────────────────────── */
+#result-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  /* display は base.css のフェーズ制御で管理（デフォルト none） */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 40px 32px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-accent);
+  max-width: 320px;
+  text-align: center;
+}
+
+.result-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1.4;
+}

@@ -1,0 +1,250 @@
+/* ================================================================
+   base.css — CSS変数・リセット・レイアウト・フェーズ切替
+   Requirements: 9.1, 9.2, 9.6
+================================================================ */
+
+/* ─── CSS 変数 ─────────────────────────────────────────────────── */
+:root {
+  --board-size: min(92vw, 420px);
+  --cell-size: calc(var(--board-size) / 4);
+  --cell-gap: 4px;
+
+  --color-bg: #1a1a2e;
+  --color-surface: #16213e;
+  --color-text: #e8e8e8;
+  --color-text-muted: #aaa;
+  --color-accent: #ffcc00;
+  --color-btn-primary: #0f3460;
+  --color-btn-hover: #1a4f7a;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --font-base: system-ui, -apple-system, sans-serif;
+}
+
+/* ─── リセット ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-base);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  padding: 16px;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ─── 共通ボタンスタイル ───────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 150ms ease, transform 80ms ease;
+}
+
+.btn--primary {
+  background: var(--color-btn-primary);
+  color: var(--color-text);
+}
+
+.btn--primary:active:not(:disabled) {
+  background: var(--color-btn-hover);
+  transform: scale(0.96);
+}
+
+.btn--large {
+  padding: 16px 32px;
+  font-size: 1.125rem;
+  min-height: 52px;
+  min-width: 160px;
+}
+
+/* ─── ラベルスタイル ───────────────────────────────────────────── */
+.area-label {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+/* ─── フェーズ別 表示/非表示 ──────────────────────────────────── */
+/* デフォルト: 全セクション非表示 */
+#start-screen,
+#game-area,
+#handover-overlay,
+#result-screen {
+  display: none !important;
+}
+
+/* START_SCREEN */
+body[data-phase="START_SCREEN"] #start-screen {
+  display: flex !important;
+}
+
+/* PLACE_PHASE */
+body[data-phase="PLACE_PHASE"] #game-area {
+  display: flex !important;
+}
+
+/* SELECT_PHASE */
+body[data-phase="SELECT_PHASE"] #game-area {
+  display: flex !important;
+}
+
+/* HANDOVER_SCREEN — game-area も表示（透けて見える） */
+body[data-phase="HANDOVER_SCREEN"] #game-area {
+  display: flex !important;
+}
+body[data-phase="HANDOVER_SCREEN"] #handover-overlay {
+  display: flex !important;
+}
+
+/* RESULT_SCREEN */
+body[data-phase="RESULT_SCREEN"] #game-area {
+  display: flex !important;
+}
+body[data-phase="RESULT_SCREEN"] #result-screen {
+  display: flex !important;
+}
+
+/* ─── Start Screen レイアウト ──────────────────────────────────── */
+#start-screen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 24px;
+  max-width: 400px;
+  width: 100%;
+  flex: 1;
+}
+
+#start-screen .title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 1px;
+}
+
+#start-screen .rules {
+  text-align: left;
+  background: var(--color-surface);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  width: 100%;
+}
+
+#start-screen .rules h2 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--color-accent);
+}
+
+#start-screen .rules ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#start-screen .rules li {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding-left: 1em;
+  text-indent: -1em;
+}
+
+#start-screen .rules li::before {
+  content: "• ";
+  color: var(--color-accent);
+}
+
+/* ─── Game Area レイアウト ─────────────────────────────────────── */
+#game-area {
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+  flex: 1;
+}
+
+/* ─── Status Bar ──────────────────────────────────────────────── */
+#status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* ─── Selected Piece Area ─────────────────────────────────────── */
+#selected-piece-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border: 2px dashed var(--color-accent);
+  border-radius: var(--radius-md);
+  min-height: 80px;
+}
+
+/* PlacePhase以外ではselected-piece-areaを隠す */
+body:not([data-phase="PLACE_PHASE"]) #selected-piece-area {
+  display: none;
+}
+
+/* ─── Unused Pieces Area ──────────────────────────────────────── */
+#unused-pieces-area {
+  width: 100%;
+  max-height: 180px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Confirm Button Area ─────────────────────────────────────── */
+#confirm-btn {
+  margin-top: 8px;
+}
