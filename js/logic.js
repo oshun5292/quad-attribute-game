@@ -14,6 +14,7 @@ export const INITIAL_STATE = {
   activePlayer: 'player1',
   result: null,
   winningLines: [],
+  playerNames: { player1: 'Player 1', player2: 'Player 2' },
 };
 
 // ─── ヘルパー関数 ──────────────────────────────────────────────────────────────
@@ -95,6 +96,7 @@ export function transition(state, action) {
 
       const pieces = shuffle(generatePieces());
       const selected = pieces[0];
+      const playerNames = action.payload?.playerNames || state.playerNames;
 
       return {
         ...INITIAL_STATE,
@@ -106,6 +108,7 @@ export function transition(state, action) {
         pendingPiece: null,
         result: null,
         winningLines: [],
+        playerNames,
       };
     }
 
@@ -221,6 +224,7 @@ export function transition(state, action) {
         activePlayer: newFirstPlayer,
         result: null,
         winningLines: [],
+        playerNames: state.playerNames,
       };
     }
 

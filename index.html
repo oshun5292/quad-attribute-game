@@ -36,9 +36,28 @@
       </ul>
     </div>
 
+    <!-- プレイヤー名入力 -->
+    <div class="player-names">
+      <div class="name-field">
+        <label for="player1-name">先攻プレイヤー</label>
+        <input id="player1-name" type="text" placeholder="Player 1" maxlength="10" autocomplete="off" />
+      </div>
+      <div class="name-field">
+        <label for="player2-name">後攻プレイヤー</label>
+        <input id="player2-name" type="text" placeholder="Player 2" maxlength="10" autocomplete="off" />
+      </div>
+    </div>
+
     <button id="start-btn" class="btn btn--primary btn--large" data-action="START_GAME">
       ゲーム開始
     </button>
+
+    <!-- 対戦履歴 -->
+    <div id="match-history" class="match-history">
+      <h3>対戦履歴</h3>
+      <ul id="history-list"></ul>
+      <button id="clear-history-btn" class="btn btn--secondary btn--small">履歴を消去</button>
+    </div>
   </section>
 
   <!-- ================================================================

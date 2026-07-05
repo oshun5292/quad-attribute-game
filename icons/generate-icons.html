@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>Icon Generator</title></head>
+<body>
+<p>右クリックで画像を保存してください（192px / 512px）</p>
+<h3>192x192</h3>
+<canvas id="c192" width="192" height="192"></canvas>
+<h3>512x512</h3>
+<canvas id="c512" width="512" height="512"></canvas>
+<script>
+async function generate() {
+  const svg = await fetch('./icon.svg').then(r => r.text());
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    for (const size of [192, 512]) {
+      const canvas = document.getElementById(`c${size}`);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, size, size);
+      // Download link
+      const a = document.createElement('a');
+      a.download = `icon-${size}.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.textContent = `Download icon-${size}.png`;
+      canvas.parentElement.insertBefore(a, canvas.nextSibling);
+    }
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+}
+generate();
+</script>
+</body>
+</html>

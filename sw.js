@@ -1,7 +1,7 @@
 // sw.js — Service Worker（Cache-first 戦略）
 // Requirements: 8.1, 8.2, 8.3, 8.4
 
-const CACHE_NAME = 'quad-attr-v2';
+const CACHE_NAME = 'quad-attr-v3';
 
 const ASSETS = [
   './',

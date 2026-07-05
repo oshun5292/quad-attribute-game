@@ -39,11 +39,12 @@
 #result-screen {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.5);
   /* display は base.css のフェーズ制御で管理（デフォルト none） */
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-bottom: 15vh;
   z-index: 200;
 }
 

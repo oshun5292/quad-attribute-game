@@ -1,0 +1,15 @@
+{
+  "name": "quad-attribute-game",
+  "version": "1.0.0",
+  "description": "4属性4×4ボードゲーム PWA",
+  "type": "module",
+  "scripts": {
+    "test": "vitest --run"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^2.0.0",
+    "fast-check": "^3.22.0",
+    "jsdom": "^25.0.1",
+    "vitest": "^2.0.0"
+  }
+}

@@ -1,28 +1,87 @@
-// main.js — 初期化・dispatch・イベントデリゲーション・SW 登録
+// main.js — 初期化・dispatch・イベントデリゲーション・SW 登録・対戦履歴
 // Requirements: 1.4, 6.4, 6.5, 8.7, 10.7, 10.8
 
 import { INITIAL_STATE, transition } from './logic.js';
 import { render } from './render.js';
 
+// ─── 対戦履歴（localStorage） ─────────────────────────────────────────────────
+
+const HISTORY_KEY = 'quadattr_match_history';
+const MAX_HISTORY = 10;
+
+function loadHistory() {
+  try {
+    const data = localStorage.getItem(HISTORY_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(history) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_HISTORY)));
+  } catch {
+    // localStorage が使えない場合は無視
+  }
+}
+
+function addMatchResult(state) {
+  if (!state.result) return;
+  const names = state.playerNames || { player1: 'Player 1', player2: 'Player 2' };
+  let entry;
+  if (state.result === 'draw') {
+    entry = `${names.player1} vs ${names.player2} - 引き分け`;
+  } else {
+    const winnerName = names[state.result];
+    entry = `${names.player1} vs ${names.player2} - ${winnerName} win`;
+  }
+  const history = loadHistory();
+  history.unshift(entry);
+  saveHistory(history);
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  if (!list) return;
+  const history = loadHistory();
+  list.innerHTML = '';
+  if (history.length === 0) {
+    const li = document.createElement('li');
+    li.textContent = 'まだ対戦履歴はありません';
+    li.style.opacity = '0.5';
+    list.appendChild(li);
+  } else {
+    for (const entry of history) {
+      const li = document.createElement('li');
+      li.textContent = entry;
+      list.appendChild(li);
+    }
+  }
+}
+
+function clearHistory() {
+  try {
+    localStorage.removeItem(HISTORY_KEY);
+  } catch {
+    // ignore
+  }
+  renderHistory();
+}
+
 // ─── 状態管理 ─────────────────────────────────────────────────────────────────
 
-/** @type {import('./logic.js').GameState} */
 let state = INITIAL_STATE;
+let previousPhase = state.phase;
 
 // ─── dispatch ─────────────────────────────────────────────────────────────────
 
-/**
- * アクションを受け取り、状態遷移と再描画を実行する。
- * HANDOVER_READY のみ try/catch でエラーリカバリーを行う（Req 6.5）。
- * @param {Object} action - { type, payload? }
- */
 function dispatch(action) {
   if (action.type === 'HANDOVER_READY') {
     try {
       state = transition(state, action);
       render(state);
     } catch (e) {
-      // Req 6.5: エラー時は HANDOVER_SCREEN を維持し、メッセージを表示
       const msg = document.getElementById('handover-message');
       if (msg) {
         msg.textContent = 'エラーが発生しました。もう一度「準備OK」を押してください。';
@@ -33,20 +92,31 @@ function dispatch(action) {
     state = transition(state, action);
     render(state);
   }
+
+  // 対戦結果を保存（RESULT_SCREEN に遷移したタイミング）
+  if (state.phase === 'RESULT_SCREEN' && previousPhase !== 'RESULT_SCREEN') {
+    addMatchResult(state);
+    renderHistory();
+  }
+  previousPhase = state.phase;
 }
 
 // ─── data-action → Action オブジェクト変換 ────────────────────────────────────
 
-/**
- * data-action 属性値と dataset から Action オブジェクトを構築する。
- * @param {string} actionType - data-action の値
- * @param {DOMStringMap} dataset - クリックされた要素の dataset
- * @returns {Object|null} Action オブジェクト、または無効な場合 null
- */
 function buildAction(actionType, dataset) {
   switch (actionType) {
-    case 'START_GAME':
-      return { type: 'START_GAME' };
+    case 'START_GAME': {
+      const p1Input = document.getElementById('player1-name');
+      const p2Input = document.getElementById('player2-name');
+      const player1Name = (p1Input?.value?.trim()) || 'Player 1';
+      const player2Name = (p2Input?.value?.trim()) || 'Player 2';
+      return {
+        type: 'START_GAME',
+        payload: {
+          playerNames: { player1: player1Name, player2: player2Name },
+        },
+      };
+    }
 
     case 'PLACE_PIECE':
       return {
@@ -79,8 +149,6 @@ function buildAction(actionType, dataset) {
 document.addEventListener('click', (e) => {
   const el = e.target.closest('[data-action]');
   if (!el) return;
-
-  // disabled 状態のボタンや aria-disabled 要素はクリックを無視
   if (el.disabled || el.getAttribute('aria-disabled') === 'true') return;
 
   const actionType = el.dataset.action;
@@ -91,10 +159,18 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// 履歴消去ボタン
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'clear-history-btn') {
+    clearHistory();
+  }
+});
+
 // ─── 初期化 ───────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
   render(state);
+  renderHistory();
 });
 
 // ─── Service Worker 登録（サイレントフォールバック: Req 8.7） ─────────────────

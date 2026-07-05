@@ -38,8 +38,9 @@ export function render(state) {
   const phaseLabel = document.getElementById('phase-label');
 
   if (activePlayerLabel) {
-    activePlayerLabel.textContent =
-      state.activePlayer === 'player1' ? 'Player 1' : 'Player 2';
+    const name = state.playerNames?.[state.activePlayer] ||
+      (state.activePlayer === 'player1' ? 'Player 1' : 'Player 2');
+    activePlayerLabel.textContent = name;
   }
 
   if (phaseLabel) {
@@ -172,10 +173,11 @@ export function render(state) {
 
   if (handoverMessage) {
     if (state.phase === 'HANDOVER_SCREEN') {
-      // Handover画面ではまだactivePlayerは切替前なので、
-      // 表示する「次のプレイヤー」は opposite(activePlayer)
-      const nextPlayerNum = state.activePlayer === 'player1' ? 2 : 1;
-      handoverMessage.textContent = `Player ${nextPlayerNum} の番です。\n端末を渡してください。`;
+      // 次のプレイヤー = opposite(activePlayer)
+      const nextPlayer = state.activePlayer === 'player1' ? 'player2' : 'player1';
+      const nextName = state.playerNames?.[nextPlayer] ||
+        (nextPlayer === 'player1' ? 'Player 1' : 'Player 2');
+      handoverMessage.textContent = `${nextName} の番です。\n端末を渡してください。`;
     } else {
       handoverMessage.textContent = '';
     }
@@ -184,10 +186,10 @@ export function render(state) {
   // 8. ResultScreen（#result-screen）
   const resultMessage = document.getElementById('result-message');
   if (resultMessage) {
-    if (state.result === 'player1') {
-      resultMessage.textContent = 'Player 1 の勝利！';
-    } else if (state.result === 'player2') {
-      resultMessage.textContent = 'Player 2 の勝利！';
+    if (state.result === 'player1' || state.result === 'player2') {
+      const winnerName = state.playerNames?.[state.result] ||
+        (state.result === 'player1' ? 'Player 1' : 'Player 2');
+      resultMessage.textContent = `${winnerName} の勝利！`;
     } else if (state.result === 'draw') {
       resultMessage.textContent = '引き分け！';
     } else {
